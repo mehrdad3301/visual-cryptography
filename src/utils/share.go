@@ -73,8 +73,8 @@ func permutate(share []int , x int) []int {
 	}	
 	
 	for idx , v := range(share) { 
-		bitI := getKthBit(v , i) 
-		bitJ := getKthBit(v , j) 
+		bitI := GetKthBit(v , i) 
+		bitJ := GetKthBit(v , j) 
 		v = setKthBit(v , j , bitI) 
 		v = setKthBit(v , i , bitJ)
 		share[idx] = v 
