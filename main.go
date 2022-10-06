@@ -57,15 +57,26 @@ func setShare(img *image.Gray , transparent []int , x, y int) {
 	}
 
 }
+
+func isBlack(color color.Color) bool { 
+	r , g , b ,a := color.RGBA() 
+	if (r == 255) && (g == 255) && 
+		(b == 255) && (a>>8 == 255) { 
+		return true }
+	return false 
+} 
+
 func setPixels(img1 , img2 *image.Gray, x , y int , color color.Color) { 
 
 	id := rand.Intn(len(shares)) 
-	if r ,_ ,_,_ := color.RGBA() ; r <= 200 { 
-		setShare(img1 , shares[id] , x , y)	
-		setShare(img2 , getComplement(shares[id]) , x , y)		
+	shareAndComplemet := [][]int{shares[id] , getComplement(shares[id])} 
+	z := rand.Intn(1) 
+	setShare(img1 , shareAndComplemet[z]  , x , y)	
+
+	if isBlack(color) { 
+		setShare(img2 , shareAndComplemet[1-z] , x , y)		
 	} else { 
-		setShare(img1 , shares[id] , x , y)	
-		setShare(img2 , shares[id] , x , y)		
+		setShare(img2 , shareAndComplemet[z]  , x , y)	
 	}
 		
 	
