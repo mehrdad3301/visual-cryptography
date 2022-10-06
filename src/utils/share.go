@@ -21,6 +21,7 @@ func GetBlackShares(n int) []int {
 
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
+		permutate(blackShareFour, 9)
 		return ShuffleShares(blackShareFour) 
 	} else if n == 2 { 
 		x := rand.Intn(len(blackShareTwo))
@@ -37,6 +38,7 @@ func GetWhiteShares(n int) []int {
 		
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
+		permutate(whiteShareFour , 9)
 		return ShuffleShares(whiteShareFour) 		
 
 	} else if n == 2 { 
