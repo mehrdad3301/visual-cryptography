@@ -1,7 +1,6 @@
 package main 
 
 import ( 
-	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -38,8 +37,8 @@ func isBlack(color color.Color) bool {
 	r , g , b ,a := color.RGBA() 
 	if (r >= 200) && (g >= 200) && 
 		(b >= 200) && (a>>8 >= 200) { 
-		return true }
-	return false 
+		return false}
+	return true 
 } 
 
 func setShare(transparent *image.Gray , share int , x , y , c int) { 
@@ -54,10 +53,7 @@ func setShare(transparent *image.Gray , share int , x , y , c int) {
 			}
 			transparent.Set(2*x + i , 2*y + j , clr)
 		} 
-
 	}
-
-
 } 
 
 func setTransparents(transparents []*image.Gray , shares []int , x , y , c int) { 
@@ -71,7 +67,6 @@ func setPixels(transparents []*image.Gray, x , y , c int , black bool) {
 
 	n := len(transparents) 
 	var shares []int 
-	fmt.Println(black)
 	if black { 
 		shares = utils.GetBlackShares(n) 
 	} else { 
@@ -137,6 +132,5 @@ func main() {
 	n := flag.Int("n" , 2 , "number of transparents") 
 	flag.Parse() 
 	encrypt(os.Args[3] , *n) 
-	fmt.Println(*n)
 }
 	
