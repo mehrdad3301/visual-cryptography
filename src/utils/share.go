@@ -1,7 +1,6 @@
-package main 
+package utils
 
 import ( 
-	"fmt"  
 	"math/rand"
 	"time"
 ) 
@@ -17,6 +16,7 @@ var (
 
 func GetBlackShares(n int) []int { 
 
+	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
 		return ShuffleShares(blackShareFour) 
 	} else if n == 2 { 
@@ -28,12 +28,13 @@ func GetBlackShares(n int) []int {
 } 
 
 func GetWhiteShares(n int) []int { 
-
+		
+	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
 		return ShuffleShares(whiteShareFour) 		
 
 	} else if n == 2 { 
-		x := rand.Intn(len(blackShareTwo))
+		x := rand.Intn(len(whiteShareTwo))
 		return []int{whiteShareTwo[x] , whiteShareTwo[x]}
 	} else { 
 		return nil
@@ -45,16 +46,9 @@ func ShuffleShares(share []int) []int {
 	
 	for i := range share { 
 		j := rand.Intn(i + 1) 
-		fmt.Print(j)
 		share[i] , share[j] = share[j] , share[i]
 	}
 
 	return share 
 }
 
-func main() {
-	
-	rand.Seed(time.Now().UnixNano())	
-	fmt.Printf("%b" , GetWhiteShares(2)) 	
-	
-}
