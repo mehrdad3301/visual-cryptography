@@ -40,7 +40,7 @@ func setShare(transparent *image.Gray , share int , x , y , c int) {
 	for i := 0 ; i < c ; i++ { 
 		for j := 0 ; j < c ; j++ { 
 
-			bit := utils.getKthBit(share , i*c + j)	
+			bit := utils.GetKthBit(share , i*c + j)	
 			clr := color.White 
 			if bit == 1 { 
 				clr = color.Black
