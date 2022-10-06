@@ -113,7 +113,7 @@ func encrypt(filename string) {
 
 func main() { 
 	
-	encrypt(os.Args[1]) 
-	fmt.Println()
+	img := readImage(os.Args[1]) 
+	fmt.Println(img)
 }
 	
