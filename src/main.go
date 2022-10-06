@@ -5,7 +5,7 @@ import (
 	"image/color"
 	"image/png"
 	"os"
-	"log" 
+	"log"
 	"flag"
 	"utils"
 	"strconv"
@@ -34,9 +34,9 @@ func getKthBit(number , k int) int {
 }
 
 func isBlack(color color.Color) bool { 
-	r , g , b ,a := color.RGBA() 
+	r , g , b ,_ := color.RGBA() 
 	if (r >= 200) && (g >= 200) && 
-		(b >= 200) && (a>>8 >= 200) { 
+		(b >= 200) { 
 		return false}
 	return true 
 } 
@@ -133,4 +133,3 @@ func main() {
 	flag.Parse() 
 	encrypt(os.Args[3] , *n) 
 }
-	
