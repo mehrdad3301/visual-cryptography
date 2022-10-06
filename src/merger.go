@@ -2,7 +2,6 @@
 package main 
 
 import ( 
-	"fmt"
 	"os"
 	"image"
 	"image/png"
@@ -63,7 +62,6 @@ func merge(images []image.Image) {
 
 func writeImage(filename string , img *image.Gray) { 
 
-	fmt.Println(img)
 	file , err := os.Create(filename) 
 	if err != nil { 
 		log.Fatal(err) 
