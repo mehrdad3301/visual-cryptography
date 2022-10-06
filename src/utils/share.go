@@ -24,7 +24,7 @@ func GetBlackShares(n int) []int {
 	} else if n == 2 { 
 		x := rand.Intn(len(blackShareTwo))
 		return ShuffleShares(blackShareTwo[x]) 
-	} else if { 
+	} else if n == 3 { 
 		return ShuffleShares(blackShareThree) 
 	} else { 
 		return nil
@@ -40,7 +40,7 @@ func GetWhiteShares(n int) []int {
 	} else if n == 2 { 
 		x := rand.Intn(len(whiteShareTwo))
 		return []int{whiteShareTwo[x] , whiteShareTwo[x]}
-	} else if { 
+	} else if n == 3 { 
 		return ShuffleShares(whiteShareThree) 	
 	} else { 
 		return nil
