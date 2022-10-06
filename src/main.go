@@ -7,26 +7,9 @@ import (
 	"image/png"
 	"math/rand"
 	"os"
-	"log"
+	"log" "flag"
+	"share"
 )
-
-var ( 
-
-	h_share = []int{1 , 1 , 0 , 0}
-	v_share = []int{1 , 0 , 0 , 1}  
-	d_share = []int{1 , 0 , 1 , 0} 
-	
-	shares = [][]int{h_share , v_share , d_share}
-)
-
-func getComplement(x []int) []int { 
-	
-	m := make([]int , 0 , cap(x)) 
-	for _ , v := range(x) { 
-		m = append(m , 1 - v) 
-	}
-	return m 
-}
 
 func readImage(filename string) (image.Image) { 
 
@@ -44,19 +27,28 @@ func readImage(filename string) (image.Image) {
 	return img 
 }
 
-func setShare(img *image.Gray , transparent []int , x, y int) { 
+func getKthBit(number , k int) int {
+	
+	return (number >> k) & 1
+	
+}
+func setShare(transparent *image.Gray , share int , x , y , c int) { 
+	
+	for i := 0 ; i < c ; i++ { 
 
-	for i:=0 ; i<=1 ; i++ { 
-		for j:=0 ; j<=1 ; j++ { 
-			c := color.Black 
-			if transparent[i*2+j] == 0 { 
-				c = color.White
-			}	
-			img.Set(2 * x + i , 2 * y + j , c)  
-		}
+		for j := 0 ; j < c ; j++ { 
+			bit := getKthBit(share , i*c +j)	
+			color := color.White 
+			if bit == 1 { 
+				color = color.Black
+			}
+			transparent.Set(i , j , color)
+		} 
+
 	}
 
-}
+
+} 
 
 func isBlack(color color.Color) bool { 
 	r , g , b ,a := color.RGBA() 
@@ -66,54 +58,80 @@ func isBlack(color color.Color) bool {
 	return false 
 } 
 
-func setPixels(img1 , img2 *image.Gray, x , y int , color color.Color) { 
+func setTransparents(transparents []*image.Gray , shares []int , x , y , c int) { 
 
-	id := rand.Intn(len(shares)) 
-	shareAndComplemet := [][]int{shares[id] , getComplement(shares[id])} 
-	z := rand.Intn(1) 
-	setShare(img1 , shareAndComplemet[z]  , x , y)	
-
-	if isBlack(color) { 
-		setShare(img2 , shareAndComplemet[1-z] , x , y)		
-	} else { 
-		setShare(img2 , shareAndComplemet[z]  , x , y)	
+	for i := range(transparents) { 
+		setShare(transparents[i] , shares[i] , x , y ,c) 
 	}
-		
+} 
+
+func setPixels(transparents []*image.Gray, x , y , c int , black bool) { 
+
+	n := len(transparents) 
+	var shares []int if black { shares = share.GetBlackShares(n) } else { 
+		shares = share.GetWhiteShares(n) 
+	}
+	setTransparents(transparents , shares , x , y , c)   
 	
 }
-func writeImage(img *image.Gray, filename string) { 
+func writeImages(imgs []*image.Gray, filename string) { 
 	 
-	f , err := os.Create(filename) 
+	for i , img := range(imgs) { 
 
-	if err != nil { 
-		log.Fatal(err) 
+		f , err := os.Create(filename + i) 
+	
+		if err != nil { 
+			log.Fatal(err) 
+		}	
+	
+		defer f.Close() 
+		png.Encode(f , img) 	
 	}	
-
-	defer f.Close() 
-	png.Encode(f , img) 	
 }
 
-func encrypt(filename string) { 
+func getTransparents(n int , rect image.Rectangle) []*image.Gray { 
+	
+	transparents := make([]*imageGray , 0 , n)  
+	for i=0 ; i<n ; i++ { 
+		transparents.append(image.NewGray(rect)) 
+	}
+	return transparents
+
+}
+
+func getRectangle(a , b Point , n int) (image.Rectangle , int) { 
+	
+	var multiplier int 
+	
+	if n == 4 { 
+		multiplier = 3 
+	} else { 
+		multiplier = 2 
+	}
+	return image.Rect(a.X , a.Y , multiplier * b.X , multiplier * b.Y) , multiplier
+} 
+
+func encrypt(filename string , n int) { 
 
 	img := readImage(filename)	
 	startPoint , endPoint := img.Bounds().Min , img.Bounds().Max 
-	rect := image.Rect(startPoint.X , startPoint.Y , 2 * endPoint.X , 2 * endPoint.Y) 
-	img1 := image.NewGray(rect)
-	img2 := image.NewGray(rect)
+	rect , c := getRectangle(startPoint , endPoint , n)
+	transparents := getTransparents(n , rect)
 
 	for x := startPoint.X ; x < endPoint.X ; x++ { 
 		for y := startPoint.Y ; y < endPoint.Y ; y++ { 
-			setPixels(img1 , img2 , x , y , img.At(x , y)) 	
+			setPixels(transparents , x , y , c , isBlack(img.At(x , y))) 	
 		}
 	}
 
-	writeImage(img1 , "img1.png") 
-	writeImage(img2 , "img2.png") 
+	writeImages(transparents)
 }
 
 func main() { 
 	
-	img := readImage(os.Args[1]) 
-	fmt.Println(img)
+	n := flag.Int("n" , 2 , "number of transparents") 
+	flag.Parse() 
+	encrypt(os.Args[1] , n) 
+	fmt.Println(*n)
 }
 	
