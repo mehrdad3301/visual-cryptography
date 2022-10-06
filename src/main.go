@@ -5,10 +5,11 @@ import (
 	"image"
 	"image/color"
 	"image/png"
-	"math/rand"
 	"os"
-	"log" "flag"
-	"share"
+	"log" 
+	"flag"
+	"utils"
+	"strconv"
 )
 
 func readImage(filename string) (image.Image) { 
@@ -32,17 +33,26 @@ func getKthBit(number , k int) int {
 	return (number >> k) & 1
 	
 }
+
+func isBlack(color color.Color) bool { 
+	r , g , b ,a := color.RGBA() 
+	if (r >= 200) && (g >= 200) && 
+		(b >= 200) && (a>>8 >= 200) { 
+		return true }
+	return false 
+} 
+
 func setShare(transparent *image.Gray , share int , x , y , c int) { 
 	
 	for i := 0 ; i < c ; i++ { 
-
 		for j := 0 ; j < c ; j++ { 
-			bit := getKthBit(share , i*c +j)	
-			color := color.White 
+
+			bit := getKthBit(share , i*c + j)	
+			clr := color.White 
 			if bit == 1 { 
-				color = color.Black
+				clr = color.Black
 			}
-			transparent.Set(i , j , color)
+			transparent.Set(2*x + i , 2*y + j , clr)
 		} 
 
 	}
@@ -50,36 +60,31 @@ func setShare(transparent *image.Gray , share int , x , y , c int) {
 
 } 
 
-func isBlack(color color.Color) bool { 
-	r , g , b ,a := color.RGBA() 
-	if (r == 255) && (g == 255) && 
-		(b == 255) && (a>>8 == 255) { 
-		return true }
-	return false 
-} 
-
 func setTransparents(transparents []*image.Gray , shares []int , x , y , c int) { 
 
 	for i := range(transparents) { 
-		setShare(transparents[i] , shares[i] , x , y ,c) 
+		setShare(transparents[i] , shares[i] , x , y , c) 
 	}
 } 
 
 func setPixels(transparents []*image.Gray, x , y , c int , black bool) { 
 
 	n := len(transparents) 
-	var shares []int if black { shares = share.GetBlackShares(n) } else { 
-		shares = share.GetWhiteShares(n) 
+	var shares []int 
+	fmt.Println(black)
+	if black { 
+		shares = utils.GetBlackShares(n) 
+	} else { 
+		shares = utils.GetWhiteShares(n) 
 	}
 	setTransparents(transparents , shares , x , y , c)   
 	
 }
-func writeImages(imgs []*image.Gray, filename string) { 
+func writeImages(imgs []*image.Gray) { 
 	 
 	for i , img := range(imgs) { 
 
-		f , err := os.Create(filename + i) 
-	
+		f , err := os.Create("img_" + strconv.Itoa(i+1) + ".png") 
 		if err != nil { 
 			log.Fatal(err) 
 		}	
@@ -91,15 +96,15 @@ func writeImages(imgs []*image.Gray, filename string) {
 
 func getTransparents(n int , rect image.Rectangle) []*image.Gray { 
 	
-	transparents := make([]*imageGray , 0 , n)  
-	for i=0 ; i<n ; i++ { 
-		transparents.append(image.NewGray(rect)) 
+	transparents := make([]*image.Gray , 0 , n)  
+	for i:=0 ; i<n ; i++ { 
+		transparents = append(transparents , image.NewGray(rect)) 
 	}
 	return transparents
 
 }
 
-func getRectangle(a , b Point , n int) (image.Rectangle , int) { 
+func getRectangle(a , b image.Point , n int) (image.Rectangle , int) { 
 	
 	var multiplier int 
 	
@@ -111,16 +116,16 @@ func getRectangle(a , b Point , n int) (image.Rectangle , int) {
 	return image.Rect(a.X , a.Y , multiplier * b.X , multiplier * b.Y) , multiplier
 } 
 
-func encrypt(filename string , n int) { 
+func encrypt(imgAddress string , n int) { 
 
-	img := readImage(filename)	
+	img := readImage(imgAddress)	
 	startPoint , endPoint := img.Bounds().Min , img.Bounds().Max 
 	rect , c := getRectangle(startPoint , endPoint , n)
 	transparents := getTransparents(n , rect)
 
 	for x := startPoint.X ; x < endPoint.X ; x++ { 
 		for y := startPoint.Y ; y < endPoint.Y ; y++ { 
-			setPixels(transparents , x , y , c , isBlack(img.At(x , y))) 	
+			setPixels(transparents , x , y , c , isBlack(img.At(x , y))) 
 		}
 	}
 
@@ -131,7 +136,7 @@ func main() {
 	
 	n := flag.Int("n" , 2 , "number of transparents") 
 	flag.Parse() 
-	encrypt(os.Args[1] , n) 
+	encrypt(os.Args[3] , *n) 
 	fmt.Println(*n)
 }
 	
