@@ -50,7 +50,7 @@ func GetWhiteShares(n int) []int {
 	}
 } 
 
-func getKthBit(number , k int) int { 
+func GetKthBit(number , k int) int { 
 	return (number >> k) & 1 
 } 
 
