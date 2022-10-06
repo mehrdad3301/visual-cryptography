@@ -45,7 +45,7 @@ func setShare(transparent *image.Gray , share int , x , y , c int) {
 			if bit == 1 { 
 				clr = color.Black
 			}
-			transparent.Set(2*x + i , 2*y + j , clr)
+			transparent.Set(c*x + i , c*y + j , clr)
 		} 
 	}
 } 
