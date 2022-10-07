@@ -12,3 +12,9 @@ Here I implemented n out of n scheme for small values of n. To understand how ev
     <img src="assets/example_2_2/img_1.png"> 
       <img src="assets/example_2_2/merged.png"> 
 </p>
+<p align="center">
+  <img src="assets/example_4_4/img_0.png"  width="370" height="160"> 
+  <img src="assets/example_4_4/merged_2.png" width="370" height="160"> 
+  <img src="assets/example_4_4/merged_3.png" width="370" height="160"> 
+  <img src="assets/example_4_4/merged.png" width="370" height="160"> 
+</p>
