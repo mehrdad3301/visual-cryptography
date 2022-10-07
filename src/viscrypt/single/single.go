@@ -1,10 +1,8 @@
-package main 
+package single
 
 import ( 
 	"image"
 	"image/color"
-	"os"
-	"flag"
 	"utils"
 )
 
@@ -14,7 +12,7 @@ func setShare(transparent *image.Gray , share int , x , y , c int) {
 	for i := 0 ; i < c ; i++ { 
 		for j := 0 ; j < c ; j++ { 
 
-			bit := utils.GetKthBit(share , i*c + j)	
+			bit := GetKthBit(share , i*c + j)	
 			clr := color.White 
 			if bit == 1 { 
 				clr = color.Black
@@ -36,9 +34,9 @@ func setPixels(transparents []*image.Gray, x , y , c int , black bool) {
 	n := len(transparents) 
 	var shares []int 
 	if black { 
-		shares = utils.GetBlackShares(n) 
+		shares = GetBlackShares(n) 
 	} else { 
-		shares = utils.GetWhiteShares(n) 
+		shares = GetWhiteShares(n) 
 	}
 	setTransparents(transparents , shares , x , y , c)   
 	
@@ -66,7 +64,7 @@ func getRectangle(a , b image.Point , n int) (image.Rectangle , int) {
 	return image.Rect(a.X , a.Y , multiplier * b.X , multiplier * b.Y) , multiplier
 } 
 
-func encrypt(imgAddress string , n int) { 
+func Encrypt(imgAddress string , n int) { 
 
 	img := utils.ReadImage(imgAddress)	
 	startPoint , endPoint := img.Bounds().Min , img.Bounds().Max 
@@ -82,9 +80,3 @@ func encrypt(imgAddress string , n int) {
 	utils.WriteImages(transparents)
 }
 
-func main() { 
-	
-	n := flag.Int("n" , 2 , "number of transparents") 
-	flag.Parse() 
-	encrypt(os.Args[3] , *n) 
-}
