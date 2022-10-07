@@ -3,37 +3,11 @@ package main
 import ( 
 	"image"
 	"image/color"
-	"image/png"
 	"os"
-	"log"
 	"flag"
 	"utils"
-	"strconv"
 )
 
-func readImage(filename string) (image.Image) { 
-
-	file , err := os.Open(filename)	
-	if err != nil { 
-		log.Fatal(err)
-	}
-
-	defer file.Close() 
-	img ,_ ,  err := image.Decode(file)	
-	if err != nil { 
-		log.Fatal(err)
-	}
-
-	return img 
-}
-
-func isBlack(color color.Color) bool { 
-	r , g , b ,_ := color.RGBA() 
-	if (r >= 200) && (g >= 200) && 
-		(b >= 200) { 
-		return false}
-	return true 
-} 
 
 func setShare(transparent *image.Gray , share int , x , y , c int) { 
 	
@@ -69,19 +43,6 @@ func setPixels(transparents []*image.Gray, x , y , c int , black bool) {
 	setTransparents(transparents , shares , x , y , c)   
 	
 }
-func writeImages(imgs []*image.Gray) { 
-	 
-	for i , img := range(imgs) { 
-
-		f , err := os.Create("img_" + strconv.Itoa(i+1) + ".png") 
-		if err != nil { 
-			log.Fatal(err) 
-		}	
-	
-		defer f.Close() 
-		png.Encode(f , img) 	
-	}	
-}
 
 func getTransparents(n int , rect image.Rectangle) []*image.Gray { 
 	
@@ -107,18 +68,18 @@ func getRectangle(a , b image.Point , n int) (image.Rectangle , int) {
 
 func encrypt(imgAddress string , n int) { 
 
-	img := readImage(imgAddress)	
+	img := utils.ReadImage(imgAddress)	
 	startPoint , endPoint := img.Bounds().Min , img.Bounds().Max 
 	rect , c := getRectangle(startPoint , endPoint , n)
 	transparents := getTransparents(n , rect)
 
 	for x := startPoint.X ; x < endPoint.X ; x++ { 
 		for y := startPoint.Y ; y < endPoint.Y ; y++ { 
-			setPixels(transparents , x , y , c , isBlack(img.At(x , y))) 
+			setPixels(transparents , x , y , c , utils.IsBlack(img.At(x , y))) 
 		}
 	}
 
-	writeImages(transparents)
+	utils.WriteImages(transparents)
 }
 
 func main() { 
