@@ -22,7 +22,7 @@ func GetBlackShares(n int) []int {
 
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
-		permutate(blackShareFour)
+		permutate(blackShareFour , 9)
 		return ShuffleShares(blackShareFour)
 	} else if n == 2 { 
 		x := rand.Intn(len(blackShareTwo))
@@ -111,7 +111,7 @@ func printTransparency(num int) {
 func printShare(share []int) { 
 
 	for _ , v := range(share) { 
-		PrintT(v) 
+		printTransparency(v) 
 	}
 } 
 
