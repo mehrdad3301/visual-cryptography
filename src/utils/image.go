@@ -41,19 +41,32 @@ func ReadImage(filename string) image.Image {
 	return img 	
 }
 
+func WriteImage(filename string , img *image.Gray) { 
+
+
+	f , err := os.Create(filename) 
+	if err != nil { 
+		log.Fatal(err)
+	}
+	
+	defer f.Close() 
+	png.Encode(f , img)
+}
+
 func WriteImages(imgs []*image.Gray) { 
 
 	for i , img := range(imgs) { 
-
-		f , err := os.Create("img_" + strconv.Itoa(i) + ".png") 
-		if err != nil { 
-			log.Fatal(err)
-		}
-
-		defer f.Close() 
-		png.Encode(f , img) 
+		filename := "img_" + strconv.Itoa(i) + ".png" 
+		WriteImage(filename , img) 
 	} 
-
-
-
 } 
+
+
+func ReadImages(names []string) []image.Image { 
+	
+	images := make([]image.Image , 0) 
+		for _ , name := range(names) { 
+			images = append(images , ReadImage(name))
+		}
+	return images 
+}
