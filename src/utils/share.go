@@ -1,13 +1,14 @@
 package utils 
 
 import ( 
+	"fmt"
 	"math/rand"
 	"time"
 ) 
 
 var ( 
 
-	blackShareTwo = [][]int{ []int{0b1100 , 0b0011} , []int{0b1010 , 0b0101} , []int{0b1001 , 0b0110}} 
+	blackShareTwo = [][]int{ []int{0b1100 , 0b0011} , []int{0b1010 , 0b0101} , []int{0b1001 , 0b0110} } 
 	whiteShareTwo = []int{ 0b1100 , 0b1010 , 0b0011 , 0b0101 , 0b1001 , 0b0110 } 
 
 	blackShareThree = []int { 0b1100 , 0b1010 , 0b1001 } 
@@ -21,8 +22,8 @@ func GetBlackShares(n int) []int {
 
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
-		permutate(blackShareFour, 9)
-		return ShuffleShares(blackShareFour) 
+		permutate(blackShareFour)
+		return ShuffleShares(blackShareFour)
 	} else if n == 2 { 
 		x := rand.Intn(len(blackShareTwo))
 		return ShuffleShares(blackShareTwo[x]) 
@@ -38,9 +39,13 @@ func GetWhiteShares(n int) []int {
 		
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
+		hole := getHole(whiteShareFour)
 		permutate(whiteShareFour , 9)
-		return ShuffleShares(whiteShareFour) 		
-
+		newHole := getHole(whiteShareFour)
+		for ; hole == newHole ; { 
+			newHole = getHole(permutate(whiteShareFour , 9))
+		}
+		return ShuffleShares(whiteShareFour)
 	} else if n == 2 { 
 		x := rand.Intn(len(whiteShareTwo))
 		return []int{whiteShareTwo[x] , whiteShareTwo[x]}
@@ -81,6 +86,7 @@ func permutate(share []int , x int) []int {
 		v = setKthBit(v , i , bitJ)
 		share[idx] = v 
 	}
+
 	return share
 } 
 
@@ -93,4 +99,34 @@ func ShuffleShares(share []int) []int {
 
 	return share 
 }
+
+func printTransparency(num int) { 
+
+	fmt.Printf("%03b\n" , num >> 6) 
+	fmt.Printf("%03b\n" , (num >> 3) - (num >> 6 << 3)) 
+	fmt.Printf("%03b\n" , num - (num >> 3) << 3 ) 
+	fmt.Println()
+}
+
+func printShare(share []int) { 
+
+	for _ , v := range(share) { 
+		PrintT(v) 
+	}
+} 
+
+func getHole(share []int) int { 
+	
+	hole := 0 
+	for _ , n := range(share) { 
+		for i:=0 ; i<9 ; i++ { 
+			x := GetKthBit(n , i)
+			if x == 1 { 	
+				hole = setKthBit(hole , i , 1)
+			}
+		}
+	}
+
+	return hole 
+} 
 
