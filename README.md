@@ -9,12 +9,26 @@ Here I implemented n out of n scheme for small values of n. To understand how ev
 <br>
 <p align="center">
   <img src="assets/example_2_2/img_0.png"> 
-    <img src="assets/example_2_2/img_1.png"> 
-      <img src="assets/example_2_2/merged.png"> 
+  <img src="assets/example_2_2/img_1.png"> 
+  <img src="assets/example_2_2/merged.png"> 
+  <br>
+  Example of 2-out-of-2 case. The first two images are transparencies. Last image is constructed by stacking the first two images.
+  <br><br>
 </p>
+
 <p align="center">
   <img src="assets/example_4_4/img_0.png"  width="370" height="160"> 
-  <img src="assets/example_4_4/merged_2.png" width="370" height="160"> 
+  <img src="assets/example_4_4/merged_2.png" width="370" height="160">
   <img src="assets/example_4_4/merged_3.png" width="370" height="160"> 
-  <img src="assets/example_4_4/merged.png" width="370" height="160"> 
+  <img src="assets/example_4_4/merged.png" width="370" height="160"> <br>
+  Example of 4-out-of-4 case. Top-left is a single transparency. Top-right is an image of two transparencies stacked. Bottom-left shows three stacked trasparencies. Only the last image reveals the secret.
+  <br>
+  <br>
+</p>
+
+<p align="center">
+  <img src="assets/example_multi/img_0.png"  width="300" height="160"> 
+  <img src="assets/example_multi/img_1.png" width="300" height="160"> 
+  <img src="assets/example_multi/merged.png" width="300" height="160"> <br>
+  Example of multi package. The first two transparencies are misleading. The secret is revealed by stacking the first two resulting in the third image.
 </p>
