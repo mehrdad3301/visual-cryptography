@@ -4,6 +4,22 @@ visual cryptography is easy to decode, implement and requires no cryptographic c
 Here I implemented n out of n scheme for small values of n. To understand how everything works, I recommend reading the original paper. Alternatively you can read [this](https://datagenetics.com/blog/november32013/index.html) blog post by Nick Berry. There are also comments and implementation notes in the source code.
 
 # Usage
+You can run the code using binaries at /bin. Alternatively you can use run the source code in /src.
+use argument below followed by image addresses. Note that multi-mode takes three images as input whereas
+single-mode takes only one. Images must be encoded in png.
+
+```
+./main -help 
+Usage of ./main:
+  -multi-mode
+      wether to use multi package to encrypt (default false) 
+  -n int 
+      number of transparencies, can't be used with multi-mode on (default 2)
+```
+
+``` 
+./main -n 2 ../assets/example_2_2/dino.png
+```
 
 # Examples
 <br>
