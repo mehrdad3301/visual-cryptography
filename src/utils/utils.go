@@ -134,9 +134,9 @@ func GetHole(share []int , subpixels int) int {
 	hole := 0 
 	for _ , n := range(share) { 
 		for i:=0 ; i<subpixels ; i++ { 
-			x := utils.GetKthBit(n , i)
+			x := GetKthBit(n , i)
 			if x == 1 { 	
-				hole = utils.SetKthBit(hole , i , 1)
+				hole = SetKthBit(hole , i , 1)
 			}
 		}
 	}
