@@ -83,17 +83,17 @@ func GetRectangle(a , b image.Point , n int) (image.Rectangle , int) {
 	return image.Rect(a.X , a.Y , multiplier * b.X , multiplier * b.Y) , multiplier
 }
  
-func GetTransparents(n int , rect image.Rectangle) []*image.Gray { 
+func GetTransparency(n int , rect image.Rectangle) []*image.Gray { 
 	
-	transparents := make([]*image.Gray , 0 , n)  
+	transparencies := make([]*image.Gray , 0 , n)  
 	for i:=0 ; i<n ; i++ { 
-		transparents = append(transparents , image.NewGray(rect)) 
+		transparencies = append(transparencies , image.NewGray(rect)) 
 	}
-	return transparents
+	return transparencies
 
 }
 
-func setShare(transparent *image.Gray , share int , x , y , c int) { 
+func setShare(transparency *image.Gray , share int , x , y , c int) { 
 	
 	for i := 0 ; i < c ; i++ { 
 		for j := 0 ; j < c ; j++ { 
@@ -103,15 +103,15 @@ func setShare(transparent *image.Gray , share int , x , y , c int) {
 			if bit == 1 { 
 				clr = color.Black
 			}
-			transparent.Set(c*x + i , c*y + j , clr)
+			transparency.Set(c*x + i , c*y + j , clr)
 		} 
 	}
 } 
 
-func SetTransparents(transparents []*image.Gray , shares []int , x , y , c int) { 
+func SetTransparency(transparencies []*image.Gray , shares []int , x , y , c int) { 
 
-	for i := range(transparents) { 
-		setShare(transparents[i] , shares[i] , x , y , c) 
+	for i := range(transparencies) { 
+		setShare(transparencies[i] , shares[i] , x , y , c) 
 	}
 } 
 
