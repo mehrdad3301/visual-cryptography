@@ -1,0 +1,46 @@
+package multi 
+
+
+import ( 
+	"time"
+	"math/rand"
+	"utils"
+) 
+
+var ( 
+	
+	threeShares = []int { 0b0111 , 0b1011 , 0b1101 , 0b1110 } 
+	twoShares = []int { 0b1100 , 0b1010 , 0b1001 , 0b0110 , 0b0011 , 0b0101 } 
+	subpixels = 4 
+) 
+
+func GetShares(targetIsBlack , img1IsBlack , img2IsBlack bool) []int { 
+
+	rand.Seed(time.Now().UnixNano()) 
+	
+	var numRemWhitePixels int	
+	if targetIsBlack { 
+		numRemWhitePixels = 0 
+	} else { 
+		numRemWhitePixels = 1
+	} 
+		
+	hole := 0	
+	var shares []int
+	for ; hole != (1 << subpixels - (1 + numRemWhitePixels)) ; { 
+		share1 := getSingleShare(img1IsBlack) 
+		share2 := getSingleShare(img2IsBlack) 
+		shares = []int {share1 , share2} 
+		hole = utils.GetHole(shares , subpixels) 
+	}
+	return shares 
+		
+}
+
+func getSingleShare(isImgBlack bool) int {
+	if isImgBlack { 	
+		return threeShares[rand.Intn(len(threeShares))] 	
+	} else { 
+		return twoShares[rand.Intn(len(twoShares))]	
+	}
+}
