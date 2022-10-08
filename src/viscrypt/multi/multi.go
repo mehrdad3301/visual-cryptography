@@ -1,5 +1,15 @@
 package multi 
 
+/*
+Multi is a encryption scheme in visual-cryptography. 
+It takes three images as input and returns two transparents. 
+First image contains the secret to be encrypted.The rest two 
+images are used to conceive. The transparents correspond to the 
+misleading images fed to the program as input. 
+
+For more information on definition of transparent see single 
+package doc. To see examples of this scheme see assets/example_multi. 
+*/
 
 import ( 
 
@@ -36,5 +46,4 @@ func Encrypt(filenames []string) {
 	}  
 
 	utils.WriteImages(transparents) 	
-
 } 
