@@ -23,7 +23,6 @@ func Encrypt(filenames []string) {
 	images := utils.ReadImages(filenames) 
 	startPoint , endPoint := images[0].Bounds().Min , images[0].Bounds().Max 
 	rect , c := utils.GetRectangle(startPoint , endPoint , 2) 
-	fmt.Println(images[0].Bounds())
 	
 	transparents := utils.GetTransparents(2 , rect) 
 	
