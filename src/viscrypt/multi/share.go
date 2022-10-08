@@ -1,4 +1,4 @@
-package multi 
+package multi
 
 
 import ( 
@@ -25,14 +25,14 @@ func GetShares(targetIsBlack , img1IsBlack , img2IsBlack bool) []int {
 		numRemWhitePixels = 1
 	} 
 		
-	hole := 0	
+	hole := 0  
 	var shares []int
-	for ; hole != (1 << subpixels - (1 + numRemWhitePixels)) ; { 
-		share1 := getSingleShare(img1IsBlack) 
-		share2 := getSingleShare(img2IsBlack) 
-		shares = []int {share1 , share2} 
+	for ; utils.CountOneBits(hole , subpixels) < subpixels - numRemWhitePixels ; { 
+		shares = []int {getSingleShare(img1IsBlack) , 
+						getSingleShare(img2IsBlack) }
 		hole = utils.GetHole(shares , subpixels) 
 	}
+
 	return shares 
 		
 }
@@ -44,3 +44,4 @@ func getSingleShare(isImgBlack bool) int {
 		return twoShares[rand.Intn(len(twoShares))]	
 	}
 }
+
