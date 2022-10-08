@@ -43,8 +43,8 @@ Usage of ./main:
 </p>
 
 <p align="center">
-  <img src="assets/example_multi/img_0.png"  width="300" height="160"> 
-  <img src="assets/example_multi/img_1.png" width="300" height="160"> 
-  <img src="assets/example_multi/merged.png" width="300" height="160"> <br>
+  <img src="assets/example_multi/img_0.png"  width="240" height="120"> 
+  <img src="assets/example_multi/img_1.png" width="240" height="120"> 
+  <img src="assets/example_multi/merged.png" width="240" height="120"> <br>
   Example of multi package. The first two transparencies are misleading. The secret is revealed by stacking the first two resulting in the third image.
 </p>
