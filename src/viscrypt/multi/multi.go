@@ -5,7 +5,6 @@ import (
 
 	"utils"
 	"image"
-	"fmt"
 )
 
 
@@ -13,7 +12,6 @@ func setPixels(transparents []*image.Gray , x , y , c int ,
 				targetIsBlack , img1IsBlack , img2IsBlack bool) { 
 	
 	shares := GetShares(targetIsBlack , img1IsBlack , img2IsBlack) 
-	fmt.Println(img2IsBlack ,	img1IsBlack, targetIsBlack)
 	utils.SetTransparents(transparents , shares , x , y , c)
 
 }
@@ -35,7 +33,6 @@ func Encrypt(filenames []string) {
 			setPixels(transparents , x , y , c , utils.IsBlack(images[0].At(x , y)),
 												 utils.IsBlack(images[1].At(x , y)),
 												 utils.IsBlack(images[2].At(x , y)))	
-			fmt.Println("hey")
 		}
 	}  
 
