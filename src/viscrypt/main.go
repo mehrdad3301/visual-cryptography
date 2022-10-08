@@ -10,8 +10,8 @@ import (
 
 func main() {
 
-	n := flag.Int("n" , 2 , "number of transparencies") 
-	isMulti := flag.Bool("multi-mode" , false , "wether to use multi-mode") 
+	n := flag.Int("n" , 2 , "number of transparencies, can't be used with multi-mode on") 
+	isMulti := flag.Bool("multi-mode" , false , "wether to use multi-mode (default false)") 
 	flag.Parse()
 	
 	if *isMulti == false {
