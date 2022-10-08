@@ -11,27 +11,26 @@ var (
 
 	blackShareTwo = [][]int{ []int{0b1100 , 0b0011} , []int{0b1010 , 0b0101} , []int{0b1001 , 0b0110} } 
 	whiteShareTwo = []int{ 0b1100 , 0b1010 , 0b0011 , 0b0101 , 0b1001 , 0b0110 } 
-	shareTwoSubpixels = 2 
-
+	shareTwoSubPixels = 4 
 	blackShareThree = []int { 0b1100 , 0b1010 , 0b1001 } 
 	whiteShareThree = []int { 0b0011 , 0b0101 , 0b0110 } 
 
 	blackShareFour = []int { 0b011011010 , 0b010111001 , 0b010110110 , 0b100111010 }
     whiteShareFour = []int { 0b011111000 , 0b010110011 , 0b001110101 , 0b000111110 } 
-	shareFourSubpixels = 9
+	shareFourSubPixels = 9
 ) 
 
 func GetBlackShares(n int) []int { 
 
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
-		permutate(blackShareFour , shareFourSubpixels)
+		permutate(blackShareFour , shareFourSubPixels)
 		return ShuffleShares(blackShareFour)
 	} else if n == 2 { 
 		x := rand.Intn(len(blackShareTwo))
 		return ShuffleShares(blackShareTwo[x]) 
 	} else if n == 3 { 
-		permutate(blackShareThree , shareTwoSubpixels) 
+		permutate(blackShareThree , shareTwoSubPixels) 
 		return ShuffleShares(blackShareThree) 
 	} else { 
 		return nil
@@ -42,11 +41,11 @@ func GetWhiteShares(n int) []int {
 		
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
-		hole := GetHole(whiteshareFour , shareFourSubPixels)
-		permutate(whiteshareFour , shareFourSubPixels)
-		newHole := GetHole(whiteshareFour , shareFourSubPixels)
+		hole := utils.GetHole(whiteShareFour , shareFourSubPixels)
+		permutate(whiteShareFour , shareFourSubPixels)
+		newHole := utils.GetHole(whiteShareFour , shareFourSubPixels)
 		for ; hole == newHole ; { 
-			newHole = GetHole(permutate(whiteshareFour , shareFourSubPixels),
+			newHole = utils.GetHole(permutate(whiteShareFour , shareFourSubPixels),
 														 shareFourSubPixels)
 		}
 		return ShuffleShares(whiteShareFour)
@@ -54,7 +53,7 @@ func GetWhiteShares(n int) []int {
 		x := rand.Intn(len(whiteShareTwo))
 		return []int{whiteShareTwo[x] , whiteShareTwo[x]}
 	} else if n == 3 { 
-		permutate(whiteShareThree , shareTwoSubpixels)
+		permutate(whiteShareThree , shareTwoSubPixels)
 		return whiteShareThree 	
 	} else { 
 		return nil
