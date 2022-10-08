@@ -147,7 +147,7 @@ func CountOneBits(num , k int) int {
 
 	sum := 0 
 	for i := 0 ; i < k ; i++ { 
-		bit := utils.GetKthBit(num , i)
+		bit := GetKthBit(num , i)
 		if bit == 1{ 
 			sum++
 		}
