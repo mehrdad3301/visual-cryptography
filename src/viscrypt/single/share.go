@@ -4,31 +4,34 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"utils"
 ) 
 
 var ( 
 
 	blackShareTwo = [][]int{ []int{0b1100 , 0b0011} , []int{0b1010 , 0b0101} , []int{0b1001 , 0b0110} } 
 	whiteShareTwo = []int{ 0b1100 , 0b1010 , 0b0011 , 0b0101 , 0b1001 , 0b0110 } 
+	shareTwoSubpixels = 2 
 
 	blackShareThree = []int { 0b1100 , 0b1010 , 0b1001 } 
 	whiteShareThree = []int { 0b0011 , 0b0101 , 0b0110 } 
 
 	blackShareFour = []int { 0b011011010 , 0b010111001 , 0b010110110 , 0b100111010 }
     whiteShareFour = []int { 0b011111000 , 0b010110011 , 0b001110101 , 0b000111110 } 
+	shareFourSubpixels = 9
 ) 
 
 func GetBlackShares(n int) []int { 
 
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
-		permutate(blackShareFour , 9)
+		permutate(blackShareFour , shareFourSubpixels)
 		return ShuffleShares(blackShareFour)
 	} else if n == 2 { 
 		x := rand.Intn(len(blackShareTwo))
 		return ShuffleShares(blackShareTwo[x]) 
 	} else if n == 3 { 
-		permutate(blackShareThree , 4) 
+		permutate(blackShareThree , shareTwoSubpixels) 
 		return ShuffleShares(blackShareThree) 
 	} else { 
 		return nil
@@ -39,37 +42,26 @@ func GetWhiteShares(n int) []int {
 		
 	rand.Seed(time.Now().UnixNano()) 
 	if n == 4 { 
-		hole := getHole(whiteShareFour)
-		permutate(whiteShareFour , 9)
-		newHole := getHole(whiteShareFour)
+		hole := GetHole(whiteshareFour , shareFourSubPixels)
+		permutate(whiteshareFour , shareFourSubPixels)
+		newHole := GetHole(whiteshareFour , shareFourSubPixels)
 		for ; hole == newHole ; { 
-			newHole = getHole(permutate(whiteShareFour , 9))
+			newHole = GetHole(permutate(whiteshareFour , shareFourSubPixels),
+														 shareFourSubPixels)
 		}
 		return ShuffleShares(whiteShareFour)
 	} else if n == 2 { 
 		x := rand.Intn(len(whiteShareTwo))
 		return []int{whiteShareTwo[x] , whiteShareTwo[x]}
 	} else if n == 3 { 
-		permutate(whiteShareThree , 4)
+		permutate(whiteShareThree , shareTwoSubpixels)
 		return whiteShareThree 	
 	} else { 
 		return nil
 	}
 } 
 
-func GetKthBit(number , k int) int { 
-	return (number >> k) & 1 
-} 
 
-func setKthBit(number , k , bit int) int { 
-	if bit == 1 { 
-		return number | ( 1 << k ) 
-	} else if bit == 0 { 
-		return number &^ ( 1 << k ) 
-	} else { 
-		return number
-	} 
-} 
 
 func permutate(share []int , x int) []int { 
 	
@@ -80,10 +72,10 @@ func permutate(share []int , x int) []int {
 	}	
 	
 	for idx , v := range(share) { 
-		bitI := GetKthBit(v , i) 
-		bitJ := GetKthBit(v , j) 
-		v = setKthBit(v , j , bitI) 
-		v = setKthBit(v , i , bitJ)
+		bitI := utils.GetKthBit(v , i) 
+		bitJ := utils.GetKthBit(v , j) 
+		v = utils.SetKthBit(v , j , bitI) 
+		v = utils.SetKthBit(v , i , bitJ)
 		share[idx] = v 
 	}
 
@@ -115,14 +107,14 @@ func printShare(share []int) {
 	}
 } 
 
-func getHole(share []int) int { 
+func GetHole(share []int , subpixels int) int { 
 	
 	hole := 0 
 	for _ , n := range(share) { 
-		for i:=0 ; i<9 ; i++ { 
-			x := GetKthBit(n , i)
+		for i:=0 ; i<subpixels ; i++ { 
+			x := utils.GetKthBit(n , i)
 			if x == 1 { 	
-				hole = setKthBit(hole , i , 1)
+				hole = utils.SetKthBit(hole , i , 1)
 			}
 		}
 	}
