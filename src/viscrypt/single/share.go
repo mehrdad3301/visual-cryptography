@@ -1,5 +1,17 @@
 package single 
 
+/*
+A share is a slice of integer. Each integer in binary representation
+contain information on how to set subpixels in transparencies. For 
+example 0b011111000 corresponds to a 3x3 matrix of subpixels in tra-
+nsparency. Below matrix illustrates how an integer is interpreted 
+and used to set pixels in transparency.
+
+		0 1 1 
+		1 1 1 
+		0 0 0
+*/
+
 import ( 
 	"fmt"
 	"math/rand"
@@ -12,6 +24,7 @@ var (
 	blackShareTwo = [][]int{ []int{0b1100 , 0b0011} , []int{0b1010 , 0b0101} , []int{0b1001 , 0b0110} } 
 	whiteShareTwo = []int{ 0b1100 , 0b1010 , 0b0011 , 0b0101 , 0b1001 , 0b0110 } 
 	shareTwoSubPixels = 4 
+
 	blackShareThree = []int { 0b1100 , 0b1010 , 0b1001 } 
 	whiteShareThree = []int { 0b0011 , 0b0101 , 0b0110 } 
 
@@ -78,8 +91,7 @@ func permutate(share []int , x int) []int {
 		share[idx] = v 
 	}
 
-	return share
-} 
+	return share } 
 
 func ShuffleShares(share []int) []int { 
 	

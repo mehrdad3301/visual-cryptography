@@ -1,5 +1,8 @@
 package multi
 
+/*
+See single/share.go for definition of share.
+*/ 
 
 import ( 
 	"time"
