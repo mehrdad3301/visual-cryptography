@@ -1,5 +1,15 @@
 package single
 
+/*
+Single package takes an image and argument n. It encrypts 
+image into n transparencies. The hidden image is only revealed 
+by stacking all the transparencies. A transparency is one of the
+n resulting encrypted images which appears to be nothing more 
+than randome noise.
+
+See examples at assets/example_{2_2 , 3_3 , 4_4} 
+*/
+
 import ( 
 	"image"
 	"utils"
