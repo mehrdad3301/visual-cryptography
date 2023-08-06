@@ -1,3 +1,5 @@
+# Contributions 
+This project was one of the first things i coded in Golang. It doesn't follow Go community guidelines and conventions. I plan on fixing it, but didn't have much time recently. Feel free to contribute if this is interesting !
 # visual-cryptography
 Visual Cryptography is a cryptographic technique which allows visual image to be encrypted in such a way that the decrypted information is a visual image. One of the best-known schemes is by Adi Shamir & Moni Naor developed 1994. ![[paper]](https://link.springer.com/content/pdf/10.1007/BFb0053419.pdf) <br>
 visual cryptography is easy to decode, implement and requires no cryptographic computations. It can be used for secret sharing, In which an  image is broken into n shares and only someone with all the n shares is able to decrypt the image. The method can be extended to allow k out of n shares to be enough for the secret to be revealed.<br>
