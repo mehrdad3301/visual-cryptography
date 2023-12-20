@@ -13,6 +13,7 @@ See examples at assets/example_{2_2 , 3_3 , 4_4}
 import (
 	"image"
 	"image/color"
+	"strconv"
 
 	img "github.com/mehrdad3301/visual-cryptography/internal/pkg/image"
 )
@@ -30,9 +31,8 @@ func setPixels(transparencies []*image.Gray, x, y, c int, black bool) {
 
 }
 
-func Encrypt(imgAddress string, n int) {
+func Encrypt(pic image.Image, n int) {
 
-	pic := img.ReadImage(imgAddress)
 	startPoint, endPoint := pic.Bounds().Min, pic.Bounds().Max
 	rect, c := getRectangle(startPoint, endPoint, n)
 	transparencies := getTransparency(n, rect)
@@ -43,7 +43,10 @@ func Encrypt(imgAddress string, n int) {
 		}
 	}
 
-	img.WriteImages(transparencies)
+	for i, _ := range transparencies {
+		filename := "img_" + strconv.Itoa(i) + ".png"
+		img.WriteImage(filename, transparencies[i])
+	}
 }
 
 func Decrypt(images []image.Image) {

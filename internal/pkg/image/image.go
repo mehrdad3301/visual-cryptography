@@ -4,9 +4,7 @@ import (
 	"image"
 	"image/color"
 	"image/png"
-	"log"
 	"os"
-	"strconv"
 )
 
 func IsBlack(c color.Color) bool {
@@ -23,46 +21,34 @@ func IsBlack(c color.Color) bool {
 	}
 }
 
-func ReadImage(filename string) image.Image {
+func ReadImage(filename string) (image.Image, error) {
 
 	f, err := os.Open(filename)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	defer f.Close()
 	img, _, err := image.Decode(f)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
-	return img
+	return img, nil
 }
 
-func WriteImage(filename string, img *image.Gray) {
+func WriteImage(filename string, img *image.Gray) error {
 
-	f, err := os.Create(filename)
+	file, err := os.Create(filename)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	defer f.Close()
-	png.Encode(f, img)
-}
+	defer file.Close()
 
-func WriteImages(imgs []*image.Gray) {
-
-	for i, img := range imgs {
-		filename := "img_" + strconv.Itoa(i) + ".png"
-		WriteImage(filename, img)
+	err = png.Encode(file, img)
+	if err != nil {
+		return err
 	}
-}
-
-func ReadImages(names []string) []image.Image {
-
-	images := make([]image.Image, 0)
-	for _, name := range names {
-		images = append(images, ReadImage(name))
-	}
-	return images
+	return nil
 }
