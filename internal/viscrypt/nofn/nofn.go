@@ -13,9 +13,6 @@ See examples at assets/example_{2_2 , 3_3 , 4_4}
 import (
 	"image"
 	"image/color"
-	"strconv"
-
-	img "github.com/mehrdad3301/visual-cryptography/internal/pkg/image"
 )
 
 func setPixels(transparencies []*image.Gray, x, y, c int, black bool) {
@@ -31,7 +28,7 @@ func setPixels(transparencies []*image.Gray, x, y, c int, black bool) {
 
 }
 
-func Encrypt(pic image.Image, n int) {
+func Encrypt(pic image.Image, n int) []*image.Gray {
 
 	startPoint, endPoint := pic.Bounds().Min, pic.Bounds().Max
 	rect, c := getRectangle(startPoint, endPoint, n)
@@ -39,17 +36,15 @@ func Encrypt(pic image.Image, n int) {
 
 	for x := startPoint.X; x < endPoint.X; x++ {
 		for y := startPoint.Y; y < endPoint.Y; y++ {
-			setPixels(transparencies, x, y, c, img.IsBlack(pic.At(x, y)))
+			setPixels(transparencies, x, y, c, IsBlack(pic.At(x, y)))
 		}
 	}
 
-	for i, _ := range transparencies {
-		filename := "img_" + strconv.Itoa(i) + ".png"
-		img.WriteImage(filename, transparencies[i])
-	}
+	return transparencies
+
 }
 
-func Decrypt(images []image.Image) {
+func Decrypt(images []image.Image) *image.Gray {
 
 	startPoint, endPoint := images[0].Bounds().Min, images[0].Bounds().Max
 	mergedImage := image.NewGray(image.Rect(startPoint.X, startPoint.Y,
@@ -58,12 +53,26 @@ func Decrypt(images []image.Image) {
 		for y := startPoint.Y; y < endPoint.Y; y++ {
 			c := color.White
 			for _, image := range images {
-				if img.IsBlack(image.At(x, y)) {
+				if IsBlack(image.At(x, y)) {
 					c = color.Black
 				}
 			}
 			mergedImage.Set(x, y, c)
 		}
 	}
-	img.WriteImage("merged.png", mergedImage)
+	return mergedImage
+}
+
+func IsBlack(c color.Color) bool {
+
+	r, g, b, _ := c.RGBA()
+	y := 0.299*float32(r) +
+		0.587*float32(g) +
+		0.114*float32(b)
+
+	if y <= 255/2 {
+		return true
+	} else {
+		return false
+	}
 }
