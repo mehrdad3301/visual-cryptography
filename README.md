@@ -1,3 +1,4 @@
+<img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/mehrdad3301/visual-cryptography/go.yml?logo=github&style=for-the-badge">
 # Contributions 
 This project was one of the first things i coded in Golang. It doesn't follow Go community guidelines and conventions. I plan on fixing it, but didn't have much time recently. Feel free to contribute if this is interesting !
 # visual-cryptography
