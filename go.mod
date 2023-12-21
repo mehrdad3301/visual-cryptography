@@ -5,8 +5,10 @@ replace github.com/mehrdad3301/visual-cryptography => /Users/snapp/visual-crypto
 go 1.21
 
 require (
+	github.com/google/uuid v1.5.0
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/pterm/pterm v0.12.72
+	github.com/rs/cors v1.10.1
 	github.com/spf13/cobra v1.8.0
 )
 
