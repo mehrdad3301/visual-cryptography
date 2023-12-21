@@ -1,13 +1,10 @@
 package cmd
 
 import (
-	"image"
-	"log"
 	"os"
 
+	"github.com/mehrdad3301/visual-cryptography/cmd/cli"
 	"github.com/mehrdad3301/visual-cryptography/cmd/server"
-	img "github.com/mehrdad3301/visual-cryptography/internal/pkg/image"
-	"github.com/mehrdad3301/visual-cryptography/internal/viscrypt/nofn"
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
 	"github.com/spf13/cobra"
@@ -38,11 +35,7 @@ func Execute() {
 			Use:   "enc",
 			Short: "encrypts image",
 			Run: func(cmd *cobra.Command, args []string) {
-				img, err := img.ReadImage(args[0])
-				if err != nil {
-					log.Fatal(err)
-				}
-				nofn.Encrypt(img, numTransparencies)
+				cli.Enc(cmd, args, numTransparencies)
 			},
 		}
 
@@ -59,15 +52,7 @@ func Execute() {
 			Use:   "dec",
 			Short: "decrypts image",
 			Run: func(cmd *cobra.Command, args []string) {
-				images := make([]image.Image, 0)
-				for _, name := range args[0:] {
-					img, err := img.ReadImage(name)
-					if err != nil {
-						log.Fatal("couldn't read image %w", err)
-					}
-					images = append(images, img)
-				}
-				nofn.Decrypt(images)
+				cli.Dec(cmd, args)
 			},
 		}
 
@@ -81,4 +66,3 @@ func Execute() {
 		os.Exit(ExitFailure)
 	}
 }
-
