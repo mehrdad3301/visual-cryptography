@@ -15,7 +15,7 @@ import (
 	"image/color"
 )
 
-func setPixels(transparencies []*image.Gray, x, y, c int, black bool) {
+func setPixels(transparencies []*image.RGBA, x, y, c int, black bool) {
 
 	n := len(transparencies)
 	var shares []int
@@ -28,7 +28,7 @@ func setPixels(transparencies []*image.Gray, x, y, c int, black bool) {
 
 }
 
-func Encrypt(pic image.Image, n int) []*image.Gray {
+func Encrypt(pic image.Image, n int) []*image.RGBA {
 
 	startPoint, endPoint := pic.Bounds().Min, pic.Bounds().Max
 	rect, c := getRectangle(startPoint, endPoint, n)
@@ -44,10 +44,10 @@ func Encrypt(pic image.Image, n int) []*image.Gray {
 
 }
 
-func Decrypt(images []image.Image) *image.Gray {
+func Decrypt(images []image.Image) *image.RGBA {
 
 	startPoint, endPoint := images[0].Bounds().Min, images[0].Bounds().Max
-	mergedImage := image.NewGray(image.Rect(startPoint.X, startPoint.Y,
+	mergedImage := image.NewRGBA(image.Rect(startPoint.X, startPoint.Y,
 		endPoint.X, endPoint.Y))
 	for x := startPoint.X; x < endPoint.X; x++ {
 		for y := startPoint.Y; y < endPoint.Y; y++ {

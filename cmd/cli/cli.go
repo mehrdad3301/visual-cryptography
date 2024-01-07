@@ -67,7 +67,7 @@ func decodeImage(filename string) (image.Image, error) {
 	return img, nil
 }
 
-func writeImage(filename string, img *image.Gray) error {
+func writeImage(filename string, img *image.RGBA) error {
 
 	file, err := os.Create(filename)
 	if err != nil {
