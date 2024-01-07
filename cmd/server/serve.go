@@ -3,7 +3,7 @@ package server
 import (
 	"fmt"
 	"image"
-	"image/jpeg"
+	"image/png"
 	"log"
 	"net/http"
 	"os"
@@ -12,6 +12,7 @@ import (
 
 	"github.com/google/uuid"
 	echo "github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/mehrdad3301/visual-cryptography/internal/viscrypt/nofn"
 	"github.com/spf13/cobra"
 )
@@ -28,6 +29,7 @@ func New() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			app := echo.New()
 			app.HideBanner = true
+			app.Use(middleware.CORS())
 
 			if _, err := os.Stat(imageDir); os.IsNotExist(err) {
 				if err = os.Mkdir(imageDir, os.ModePerm); err != nil {
@@ -83,7 +85,7 @@ func uploadImage(c echo.Context) error {
 
 	imagePaths := []string{}
 	for i, encryptedImage := range encImages {
-		imagePath := filepath.Join(requestDir, fmt.Sprintf("image_%d.jpeg", i+1))
+		imagePath := filepath.Join(requestDir, fmt.Sprintf("image_%d.png", i+1))
 		imageFile, err := os.Create(imagePath)
 		if err != nil {
 			log.Print(fmt.Errorf("couldn't create file: %w", err))
@@ -91,7 +93,7 @@ func uploadImage(c echo.Context) error {
 		}
 		defer imageFile.Close()
 
-		err = jpeg.Encode(imageFile, encryptedImage, nil)
+		err = png.Encode(imageFile, encryptedImage)
 		if err != nil {
 			log.Print(fmt.Errorf("image couldn't be encoded in jpeg: %w", err))
 			return echo.ErrInternalServerError
