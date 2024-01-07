@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Server Image Upload with Preview</title>
+    <script src="https://cdn.jsdelivr.net/npm/jimp/browser/lib/jimp.min.js"></script>
+    <!-- <link rel="stylesheet" href="dark-theme.css"> -->
+    <style>
+        /* Your existing styles remain unchanged */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto;
+            height: 100vh;
+            background-color: #222;
+            /* Dark background color */
+            color: #fff;
+            /* Light text color */
+        }
+
+        header {
+            text-align: center;
+            padding: 1rem;
+            background-color: #333;
+            /* Darker background color for header */
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-gap: 1rem;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        label {
+            background-color: #444;
+            /* Darker background color for label */
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        img#imagePreview {
+            display: none;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        button {
+            background-color: #555;
+            /* Darker background color for button */
+            color: #fff;
+            /* Light text color for button */
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        #result {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            background-color: #333;
+            /* Darker background color for result area */
+        }
+
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #555;
+            /* Border color for image container */
+            background-color: #444;
+            /* Darker background color for image container */
+        }
+
+        .image-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .image-container button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #555;
+            /* Darker background color for button */
+            color: #fff;
+            /* Light text color for button */
+            padding: 0.3rem 0.5rem;
+            cursor: pointer;
+            border: none;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Go Server Image Upload with Preview</h1>
+    </header>
+
+    <main>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="photo">Choose a Photo</label>
+            <input type="file" name="photo" id="photo" accept="image/*" required onchange="previewImage(event)">
+            <img id="imagePreview" src="#" alt="Preview">
+            <button type="button" onclick="uploadImage()">Upload Image</button>
+        </form>
+
+        <div id="result"></div>
+    </main>
+
+
+    <script>
+        // Updated JavaScript code to handle multiple image containers
+
+        var toUploadFile;
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById("imagePreview");
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+
+                reader.readAsDataURL(input.files[0]);
+                toUploadFile = input.files[0];
+            }
+        }
+
+        function uploadImage() {
+            const form = document.getElementById("uploadForm");
+            const formData = new FormData();
+            formData.append("image", toUploadFile);
+
+            fetch(`http://localhost:1234/upload?k=${3}`, {
+                method: "POST",
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((data) => displayImages(data.imagePaths))
+                .catch((error) => console.error("Error:", error));
+        }
+
+
+        function displayImages(imagePaths) {
+            if (!imagePaths) {
+                console.error("Invalid response:", imagePaths);
+                return;
+            }
+
+            const resultContainer = document.getElementById("result");
+            resultContainer.innerHTML = ""; // Clear existing content
+
+            // Ensure imagePaths is an array
+            const pathsArray = Array.isArray(imagePaths) ? imagePaths : [imagePaths];
+
+            // Create a container for the entire set of images
+            const setContainer = document.createElement("div");
+            setContainer.classList.add("image-set-container");
+
+            pathsArray.forEach((imagePath, index) => {
+                const container = document.createElement("div");
+                container.classList.add("image-container");
+
+                const image = document.createElement("img");
+                image.src = imagePath;
+                image.alt = `Image ${index + 1}`;
+
+                const closeButton = document.createElement("button");
+                closeButton.textContent = "Close";
+                closeButton.addEventListener("click", () => {
+                    container.remove();
+                });
+
+                container.appendChild(image);
+                container.appendChild(closeButton);
+
+                setContainer.appendChild(container);
+            });
+            // Append the entire set container to the result container
+            resultContainer.appendChild(setContainer);
+        }
+
+
+
+
+        const imagePaths = [
+            "images/53d4dad6-5021-4e1e-a6bf-fde1cee82969/image_1.png",
+            "images/53d4dad6-5021-4e1e-a6bf-fde1cee82969/image_2.png",
+            "images/53d4dad6-5021-4e1e-a6bf-fde1cee82969/image_3.png"
+        ];
+        displayImages(imagePaths);
+    </script>
+</body>
+
+</html>
