@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    height: 100vh;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+header {
+    text-align: center;
+    padding: 1rem;
+    background-color: #ddd;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 1rem;
+    text-align: center;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+#kValue {
+    padding: 0.5rem;
+    font-size: 16px;
+    border: 1px solid #555;
+    background-color: #eee;
+    color: #333;
+    border-radius: 4px;
+    width: 100px;
+    margin-right: 10px;
+    outline: none;
+}
+
+label {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 16px;
+    background-color: #eee;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #555;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+}
+
+button[type="button"] {
+    background-color: #555;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+button[type="button"]:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+img#imagePreview {
+    display: none;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+    max-width: 400px;
+    max-height: 400px;
+}
+
+#result {
+    display: grid;
+    /* grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); */
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #fff;
+    min-height: 600px;
+    margin-bottom: 20px;
+}
+
+.image-container {
+    position: absolute;
+    cursor: move;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    mix-blend-mode: normal;
+    image-rendering: pixelated;
+    max-width: 400px;
+    max-height: 400px;
+}
+
+.image-container button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.form-group input[type="file"],
+.form-group input[type="number"],
+.form-group button {
+    padding: 3px 10px;
+    border-radius: 5px;
+    margin-left: 10px;
+    border: 1px solid #555;
+    background-color: #eee;
+    color: #333;
+    font-size: 16px;
+}
+
+.centered-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    /* Allow images to wrap to the next row if necessary */
+}

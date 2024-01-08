@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Server Image Upload with Preview</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+
+    <main>
+        <div id="result"></div>
+        <div>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <button type="button" onclick="choosePhoto()" class="choose-photo-button">Choose a Photo</button>
+                    <input type="file" name="photo" id="photo" accept="image/*" required onchange="previewImage(event)">
+                    <button type="button" onclick="uploadImage()">Upload Image</button>
+                </div>
+                <img id="imagePreview" src="#" alt="Preview">
+                <div class="form-group">
+                    <label for="kValue">Select the value of k:</label>
+                    <input type="number" id="kValue" min="2" max="4" placeholder="Enter k (2, 3, or 4)">
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="script.js">    </script>
+</body>
+
+</html>

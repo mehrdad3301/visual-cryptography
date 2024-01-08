@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .image-set-container {
+            position: relative;
+            display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Optional: Center within viewport height */
+        }
+
+        .image-container {
+            position: absolute;
+            cursor: move;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            mix-blend-mode: normal;
+            image-rendering: pixelated;
+            /* opacity: 100%; */
+        }
+
+        .image-container button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="result"></div>
+
+    <script>
+        function displayImages(imagePaths) {
+            if (!imagePaths) {
+                console.error("Invalid response:", imagePaths);
+                return;
+            }
+
+            const resultContainer = document.getElementById("result");
+            resultContainer.innerHTML = ""; // Clear existing content
+
+            // Ensure imagePaths is an array
+            const pathsArray = Array.isArray(imagePaths) ? imagePaths : [imagePaths];
+
+            // Create a container for the entire set of images
+            const setContainer = document.createElement("div");
+            setContainer.classList.add("image-set-container");
+
+            pathsArray.forEach((imagePath, index) => {
+                const container = document.createElement("div");
+                container.classList.add("image-container");
+
+                const image = document.createElement("img");
+                image.src = imagePath;
+                image.alt = `Image ${index + 1}`;
+
+                // const closeButton = document.createElement("button");
+                // closeButton.textContent = "Close";
+                // closeButton.addEventListener("click", () => {
+                //     container.remove();
+                // });
+                // container.appendChild(closeButton);
+
+                container.appendChild(image);
+
+                setContainer.appendChild(container);
+
+                // Make the image draggable
+                makeDraggable(container);
+            });
+
+            // Append the entire set container to the result container
+            resultContainer.appendChild(setContainer);
+        }
+
+        function makeDraggable(element) {
+            let offsetX, offsetY, isDragging = false;
+
+            element.addEventListener("mousedown", (e) => {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+            });
+
+            document.addEventListener("mousemove", (e) => {
+                if (isDragging) {
+                    if (e.shiftKey) {
+                        // If Shift key is held down, snap to the top-left corner of the colliding image
+                        const collidingElement = getCollidingElement(element, e.clientX, e.clientY);
+                        if (collidingElement) {
+                            const collidingRect = collidingElement.getBoundingClientRect();
+                            element.style.left = collidingRect.left - element.clientLeft -8 + "px";
+                            element.style.top = collidingRect.top - element.clientTop -8+ "px";
+                            return;
+                        }
+                    }
+
+                    // Otherwise, move the element based on mouse movements
+                    element.style.left = e.clientX - offsetX + "px";
+                    element.style.top = e.clientY - offsetY + "px";
+                }
+            });
+
+            document.addEventListener("mouseup", () => {
+                isDragging = false;
+            });
+        }
+
+        function getCollidingElement(element, mouseX, mouseY) {
+            // Find the colliding element based on mouse position
+            const elements = document.elementsFromPoint(mouseX, mouseY);
+            return elements.find(el => el !== element && el.classList.contains("image-container"));
+        }
+
+        const imagePaths = [
+            "../../images/b210d241-2cb6-4e95-913d-649b0a9ff74d/image_2.png",
+            "../../images/b210d241-2cb6-4e95-913d-649b0a9ff74d/image_1.png",
+            "../../images/b210d241-2cb6-4e95-913d-649b0a9ff74d/image_3.png"
+        ];
+
+        displayImages(imagePaths);
+    </script>
+</body>
+</html>
