@@ -74,58 +74,118 @@
 
         #result {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
             gap: 1rem;
             padding: 1rem;
-            background-color: #333;
-            /* Darker background color for result area */
+            background-color: #fff;
+            min-height: 600px;
         }
 
         .image-container {
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #555;
-            /* Border color for image container */
-            background-color: #444;
-            /* Darker background color for image container */
+            position: absolute;
+            cursor: move;
         }
 
         .image-container img {
-            display: block;
             width: 100%;
             height: auto;
+            display: block;
         }
 
         .image-container button {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: #555;
-            /* Darker background color for button */
+            top: 0;
+            right: 0;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        #kValue {
+            padding: 0.5rem;
+            font-size: 16px;
+            border: 1px solid #555;
+            background-color: #444;
             color: #fff;
-            /* Light text color for button */
-            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            width: 100px;
+            /* Adjust the width as needed */
+            margin-right: 10px;
+            /* Add some margin for spacing */
+            outline: none;
+            /* Remove the default input outline */
+        }
+
+        button[type="button"] {
+            background-color: #555;
+            color: #fff;
+            padding: 0.5rem 1rem;
             cursor: pointer;
             border: none;
-            font-size: 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button[type="button"]:hover {
+            background-color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .form-group input[type="file"],
+        .form-group input[type="number"],
+        .form-group button {
+            padding: 3px 10px;
+            /* Adjust padding as needed */
+            border-radius: 5px;
+            margin-left: 10px;
+            /* Rounded corners */
+            border: 1px solid #555;
+            background-color: #444;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        label {
+            /* display: block; */
+            margin-bottom: 10px;
+            /* Add some spacing between label and input */
+            color: #fff;
+            font-size: 16px;
+            background-color: #444;
+            padding: 5px 10px;
+            /* Adjust padding as needed */
+            border-radius: 5px;
+            /* Rounded corners */
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <h1>Go Server Image Upload with Preview</h1>
-    </header>
 
     <main>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <label for="photo">Choose a Photo</label>
-            <input type="file" name="photo" id="photo" accept="image/*" required onchange="previewImage(event)">
-            <img id="imagePreview" src="#" alt="Preview">
-            <button type="button" onclick="uploadImage()">Upload Image</button>
-        </form>
-
+        <div>
+            <label for="photo">Visual Cryptography</label>
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="photo">Choose a Photo</label>
+                    <input type="file" name="photo" id="photo" accept="image/*" required onchange="previewImage(event)">
+                    <button type="button" onclick="uploadImage()">Upload Image</button>
+                </div>
+                <img id="imagePreview" src="#" alt="Preview">
+                <div class="form-group">
+                    <label for="kValue">Select the value of k:</label>
+                    <input type="number" id="kValue" min="2" max="4" placeholder="Enter k (2, 3, or 4)">
+                </div>
+            </form>
+        </div>
         <div id="result"></div>
+
     </main>
 
 
@@ -153,9 +213,15 @@
         function uploadImage() {
             const form = document.getElementById("uploadForm");
             const formData = new FormData();
+            const kValue = parseInt(document.getElementById("kValue").value);
+
+            if (![2, 3, 4].includes(kValue)) {
+                alert("Invalid value for 'k'. Please enter 2, 3, or 4.");
+                return;
+            }
             formData.append("image", toUploadFile);
 
-            fetch(`http://localhost:1234/upload?k=${3}`, {
+            fetch(`http://localhost:1234/upload?k=${kValue}`, {
                 method: "POST",
                 body: formData,
             })
@@ -182,37 +248,72 @@
             setContainer.classList.add("image-set-container");
 
             pathsArray.forEach((imagePath, index) => {
+                const fullPath = "../../" + imagePath;
                 const container = document.createElement("div");
                 container.classList.add("image-container");
 
                 const image = document.createElement("img");
-                image.src = imagePath;
+                image.src = fullPath;
                 image.alt = `Image ${index + 1}`;
 
-                const closeButton = document.createElement("button");
-                closeButton.textContent = "Close";
-                closeButton.addEventListener("click", () => {
-                    container.remove();
-                });
+                // const closeButton = document.createElement("button");
+                // closeButton.textContent = "Close";
+                // closeButton.addEventListener("click", () => {
+                //     container.remove();
+                // });
+                // container.appendChild(closeButton);
 
                 container.appendChild(image);
-                container.appendChild(closeButton);
 
                 setContainer.appendChild(container);
+
+                // Make the image draggable
+                makeDraggable(container);
             });
+
             // Append the entire set container to the result container
             resultContainer.appendChild(setContainer);
         }
 
+        function makeDraggable(element) {
+            let offsetX, offsetY, isDragging = false;
 
+            element.addEventListener("mousedown", (e) => {
+                isDragging = true;
+                offsetX = e.clientX - element.getBoundingClientRect().left;
+                offsetY = e.clientY - element.getBoundingClientRect().top;
+            });
 
+            document.addEventListener("mousemove", (e) => {
+                if (isDragging) {
+                    if (e.shiftKey) {
+                        // If Shift key is held down, snap to the top-left corner of the colliding image
+                        const collidingElement = getCollidingElement(element, e.clientX, e.clientY);
+                        if (collidingElement) {
+                            const collidingRect = collidingElement.getBoundingClientRect();
+                            element.style.left = collidingRect.left - element.clientLeft + "px";
+                            element.style.top = collidingRect.top - element.clientTop + "px";
+                            return;
+                        }
+                    }
 
-        const imagePaths = [
-            "images/53d4dad6-5021-4e1e-a6bf-fde1cee82969/image_1.png",
-            "images/53d4dad6-5021-4e1e-a6bf-fde1cee82969/image_2.png",
-            "images/53d4dad6-5021-4e1e-a6bf-fde1cee82969/image_3.png"
-        ];
-        displayImages(imagePaths);
+                    // Otherwise, move the element based on mouse movements
+                    element.style.left = e.clientX - offsetX + "px";
+                    element.style.top = e.clientY - offsetY + "px";
+                }
+            });
+
+            document.addEventListener("mouseup", () => {
+                isDragging = false;
+            });
+        }
+
+        function getCollidingElement(element, mouseX, mouseY) {
+            // Find the colliding element based on mouse position
+            const elements = document.elementsFromPoint(mouseX, mouseY);
+            return elements.find(el => el !== element && el.classList.contains("image-container"));
+        }
+
     </script>
 </body>
 

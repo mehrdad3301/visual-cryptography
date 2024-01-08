@@ -58,14 +58,14 @@
                 image.src = imagePath;
                 image.alt = `Image ${index + 1}`;
 
-                const closeButton = document.createElement("button");
-                closeButton.textContent = "Close";
-                closeButton.addEventListener("click", () => {
-                    container.remove();
-                });
+                // const closeButton = document.createElement("button");
+                // closeButton.textContent = "Close";
+                // closeButton.addEventListener("click", () => {
+                //     container.remove();
+                // });
+                // container.appendChild(closeButton);
 
                 container.appendChild(image);
-                container.appendChild(closeButton);
 
                 setContainer.appendChild(container);
 
@@ -117,8 +117,9 @@
         }
 
         const imagePaths = [
-            "images/2265111a-b505-4c88-a43d-848c57f6e619/image_2.png",
-            "images/2265111a-b505-4c88-a43d-848c57f6e619/image_1.png"
+            "../../images/b210d241-2cb6-4e95-913d-649b0a9ff74d/image_2.png",
+            "../../images/b210d241-2cb6-4e95-913d-649b0a9ff74d/image_1.png",
+            "../../images/b210d241-2cb6-4e95-913d-649b0a9ff74d/image_3.png"
         ];
 
         displayImages(imagePaths);
